@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CamaraSeguirPelota : MonoBehaviour
+public class CamaraSeguirPlayer : MonoBehaviour
 {
-    public Transform pelota;  
-    public Vector3 offset = new Vector3(-6.28f, 57.873f, -27.64f); 
+    public Transform player;
+    public Vector3 offset;
 
     void Update()
     {
         
-        transform.position = pelota.position + offset;
-        transform.LookAt(pelota);
+        transform.position = player.position + offset;
+        transform.LookAt(player);
     }
 }
