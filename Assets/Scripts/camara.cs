@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class CamaraSeguirPlayer : MonoBehaviour
 {
-    public Transform player;
-    public Vector3 offset;
+    public Transform target;
+    public float xOffset, yOffset, zOffset;
+
+    private void Start()
+    {
+        
+    }
 
     void Update()
     {
-        
-        transform.position = player.position + offset;
-        transform.LookAt(player);
+
+        transform.position = target.transform.position + new Vector3(xOffset, yOffset, zOffset);
+
+        transform.LookAt(target.transform.position);
     }
 }

@@ -1,38 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class RollingBall : MonoBehaviour
 {
-    public float fuerzaMovimiento = 3f; // La fuerza para mover la bola a los lados
-    public float velocidadConstante = 1.5f; // Velocidad constante hacia adelante
-    public float fuerzaSalto = 8f;
-
+    public float speed = 10f;
+    public float fuerzaSalto = 5f;
     private Rigidbody rb;
+    private bool isGrounded;
+    public Spawn spawn;
 
     void Start()
     {
-        // Obtenemos el Rigidbody del objeto
         rb = GetComponent<Rigidbody>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        // Mantener una velocidad constante hacia adelante en el eje Z
-        rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, velocidadConstante);
+        // Movimiento
+        float x = Input.GetAxis("Horizontal") * speed;
+        float z = Input.GetAxis("Vertical") * speed;
+        rb.AddForce(new Vector3(x, 0, z));
 
-        // Obtener el valor del eje "Horizontal" para moverse lateralmente con A y D
-        float movimientoLateral = Input.GetAxis("Horizontal");
-
-        // Crear un vector de fuerza solo en el eje X
-        Vector3 fuerzaLateral = new Vector3(movimientoLateral, 0, 0);
-
-        // Aplicar la fuerza lateral al Rigidbody
-        rb.AddForce(fuerzaLateral * fuerzaMovimiento, ForceMode.Force);
-
-        if (Input.GetKeyDown(KeyCode.Space)) 
+        // Salto
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
-            GetComponent<Rigidbody>().AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
+            isGrounded = false;
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("GameOver"))
+        {
+            spawn.DeadPlayer();
         }
     }
 }
+
+
+
